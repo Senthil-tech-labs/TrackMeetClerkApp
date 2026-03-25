@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shockwave Showcase — Staging App User Manual</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0f1a;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      background: linear-gradient(160deg, #0f1f3d 0%, #0a0f1a 60%);
+      border-bottom: 1px solid #1e293b;
+      padding: 64px 24px 56px;
+      text-align: center;
+    }
+    .cover .badge {
+      display: inline-block;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: #38bdf8;
+      background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 99px; padding: 5px 16px; margin-bottom: 24px;
+    }
+    .cover h1 {
+      font-size: 2.6rem; font-weight: 900; letter-spacing: -1px;
+      background: linear-gradient(90deg, #e2e8f0, #94a3b8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 10px;
+    }
+    .cover .subtitle {
+      font-size: 1.05rem; color: #64748b; margin-bottom: 40px;
+    }
+
+    /* ── Role cards on cover ── */
+    .role-grid {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      justify-content: center; max-width: 680px; margin: 0 auto;
+    }
+    .role-pill {
+      display: flex; align-items: center; gap: 10px;
+      border-radius: 12px; padding: 12px 20px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: transform 0.15s;
+      border: 1px solid transparent;
+    }
+    .role-pill:hover { transform: translateY(-2px); }
+    .role-pill .icon { font-size: 1.3rem; }
+    .pill-clerk   { background: rgba(56,189,248,0.1);  border-color: rgba(56,189,248,0.3);  color: #38bdf8; }
+    .pill-coach   { background: rgba(52,211,153,0.1);  border-color: rgba(52,211,153,0.3);  color: #34d399; }
+    .pill-timer   { background: rgba(251,191,36,0.1);  border-color: rgba(251,191,36,0.3);  color: #fbbf24; }
+    .pill-ann     { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.3); color: #a78bfa; }
+
+    /* ── Page layout ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+    /* ── Role section ── */
+    .role-section { margin-top: 64px; }
+    .role-header {
+      display: flex; align-items: center; gap: 16px;
+      padding: 20px 24px; border-radius: 16px 16px 0 0;
+      margin-bottom: 0;
+    }
+    .role-header .ricon { font-size: 2rem; }
+    .role-header h2 { font-size: 1.5rem; font-weight: 800; }
+    .role-header p  { font-size: 0.88rem; opacity: 0.8; margin-top: 2px; }
+
+    .hdr-clerk { background: rgba(56,189,248,0.12);  border: 1px solid rgba(56,189,248,0.25); }
+    .hdr-coach { background: rgba(52,211,153,0.12);  border: 1px solid rgba(52,211,153,0.25); }
+    .hdr-timer { background: rgba(251,191,36,0.12);  border: 1px solid rgba(251,191,36,0.25); }
+    .hdr-ann   { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.25); }
+
+    .clr-clerk { color: #38bdf8; }
+    .clr-coach { color: #34d399; }
+    .clr-timer { color: #fbbf24; }
+    .clr-ann   { color: #a78bfa; }
+
+    /* ── Cards ── */
+    .card {
+      background: #111827; border: 1px solid #1e293b;
+      border-radius: 0 0 0 0; padding: 24px 28px; margin-bottom: 2px;
+    }
+    .card:last-of-type { border-radius: 0 0 14px 14px; margin-bottom: 0; }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: #f1f5f9; }
+
+    /* ── Steps ── */
+    .steps { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .step  { display: flex; gap: 14px; align-items: flex-start; }
+    .step-n {
+      min-width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+    }
+    .sn-clerk { background: rgba(56,189,248,0.15);  color: #38bdf8; }
+    .sn-coach { background: rgba(52,211,153,0.15);  color: #34d399; }
+    .sn-timer { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+    .sn-ann   { background: rgba(167,139,250,0.15); color: #a78bfa; }
+
+    .step-body { font-size: 0.9rem; color: #94a3b8; padding-top: 3px; }
+    .step-body strong { color: #e2e8f0; }
+
+    /* ── Tip box ── */
+    .tip {
+      border-radius: 10px; padding: 14px 18px;
+      font-size: 0.85rem; line-height: 1.65; margin-top: 16px;
+    }
+    .tip-clerk { background: rgba(56,189,248,0.07);  border: 1px solid rgba(56,189,248,0.2);  color: #7dd3fc; }
+    .tip-coach { background: rgba(52,211,153,0.07);  border: 1px solid rgba(52,211,153,0.2);  color: #6ee7b7; }
+    .tip-timer { background: rgba(251,191,36,0.07);  border: 1px solid rgba(251,191,36,0.2);  color: #fde68a; }
+    .tip-ann   { background: rgba(167,139,250,0.07); border: 1px solid rgba(167,139,250,0.2); color: #c4b5fd; }
+    .tip strong { color: inherit; }
+
+    /* ── Phone mockup ── */
+    .mockup-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .phone {
+      width: 200px; background: #1e293b; border: 2px solid #334155;
+      border-radius: 22px; padding: 18px 14px; text-align: center; flex-shrink: 0;
+    }
+    .phone .p-title {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .phone .p-field {
+      background: #0a0f1a; border-radius: 8px;
+      padding: 8px 10px; margin-bottom: 7px; text-align: left;
+    }
+    .phone .p-label { font-size: 0.58rem; color: #475569; text-transform: uppercase; letter-spacing: 0.8px; }
+    .phone .p-value { font-size: 0.88rem; color: #f1f5f9; font-weight: 600; margin-top: 1px; }
+    .phone .p-value.big { font-size: 2.4rem; font-weight: 900; line-height: 1; }
+
+    .hero-row-m { display: flex; gap: 7px; margin-bottom: 7px; }
+    .hero-cell-m { flex: 1; background: #0a0f1a; border-radius: 8px; padding: 8px 6px; }
+    .hero-cell-m .p-label { font-size: 0.55rem; }
+
+    .p-btn {
+      width: 100%; padding: 9px 0; border: none; border-radius: 9px;
+      font-size: 0.82rem; font-weight: 700; cursor: default; margin-top: 6px;
+    }
+    .p-btn-scan    { background: linear-gradient(135deg, #0ea5e9, #6366f1); color: #fff; }
+    .p-btn-checkin { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+    .p-btn-staging { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .p-btn-purple  { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); }
+
+    .p-status-row {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #0a0f1a; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px;
+    }
+    .p-status-row .p-event { font-size: 0.72rem; color: #94a3b8; text-align: left; flex: 1; }
+    .p-status-row .p-count { font-size: 0.78rem; font-weight: 700; white-space: nowrap; margin-left: 8px; }
+    .count-ok  { color: #34d399; }
+    .count-mid { color: #fbbf24; }
+    .count-low { color: #f87171; }
+
+    /* ── Warning / alert box ── */
+    .alert {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 10px; padding: 14px 18px; margin-top: 16px;
+      font-size: 0.85rem; color: #fca5a5; line-height: 1.6;
+    }
+    .alert .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── What to do if section ── */
+    .trouble { margin-top: 16px; }
+    .trouble h4 { font-size: 0.82rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .trouble-row {
+      display: flex; gap: 0; border-radius: 8px; overflow: hidden; margin-bottom: 6px;
+    }
+    .trouble-q { background: #1e293b; padding: 10px 14px; font-size: 0.84rem; color: #94a3b8; flex: 1; }
+    .trouble-a { background: #0f1724; padding: 10px 14px; font-size: 0.84rem; color: #e2e8f0; flex: 1.2; }
+
+    /* ── Quick ref table ── */
+    .qref { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.86rem; }
+    .qref th { background: #1e293b; color: #64748b; font-size: 0.72rem; text-transform: uppercase;
+      letter-spacing: 1px; padding: 8px 12px; text-align: left; font-weight: 700; }
+    .qref td { padding: 10px 12px; border-bottom: 1px solid #1e293b; color: #94a3b8; vertical-align: top; }
+    .qref td:first-child { color: #e2e8f0; font-weight: 600; white-space: nowrap; }
+    .qref tr:last-child td { border-bottom: none; }
+
+    /* ── Telegram notification mockup ── */
+    .tg-bubble {
+      background: #1e293b; border-radius: 14px 14px 14px 4px;
+      padding: 14px 16px; margin: 12px 0; text-align: left;
+      border: 1px solid #334155;
+    }
+    .tg-from { font-size: 0.72rem; color: #38bdf8; font-weight: 700; margin-bottom: 6px; }
+    .tg-text { font-size: 0.85rem; color: #e2e8f0; line-height: 1.55; }
+    .tg-time { font-size: 0.68rem; color: #475569; text-align: right; margin-top: 6px; }
+
+    /* ── Divider ── */
+    .section-divider {
+      text-align: center; margin: 56px 0 0; color: #1e293b;
+      font-size: 1.2rem; letter-spacing: 8px;
+    }
+
+    footer {
+      text-align: center; padding: 40px 24px;
+      color: #334155; font-size: 0.8rem; border-top: 1px solid #1e293b;
+    }
+
+    @media (max-width: 600px) {
+      .cover h1 { font-size: 1.8rem; }
+      .card { padding: 18px; }
+      .phone { width: 170px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ COVER ══════════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="badge">User Manual</div>
+  <h1>Shockwave Showcase<br>Staging App</h1>
+  <p class="subtitle">Everything you need to know — by your role</p>
+
+  <div class="role-grid">
+    <a class="role-pill pill-clerk" href="#clerk">
+      <span class="icon">📋</span> Staging Clerk
+    </a>
+    <a class="role-pill pill-coach" href="#coach">
+      <span class="icon">🏅</span> Coach
+    </a>
+    <a class="role-pill pill-timer" href="#timer">
+      <span class="icon">⏱</span> Timer
+    </a>
+    <a class="role-pill pill-ann" href="#announcer">
+      <span class="icon">🎙</span> Announcer
+    </a>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══ CLERK ══════════════════════════════════════════════════════════════ -->
+<div class="role-section" id="clerk">
+  <div class="role-header hdr-clerk">
+    <div class="ricon">📋</div>
+    <div>
+      <h2 class="clr-clerk">Staging Clerk</h2>
+      <p>You check in athletes as they arrive at the staging area and notify coaches when staging begins.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Before Race Day — Get Set Up</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-clerk">1</div>
+        <div class="step-body">Install <strong>AppSheet</strong> from the App Store (iPhone) or Play Store (Android)</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">2</div>
+        <div class="step-body">Sign in with your <strong>Google account</strong> — the meet director will have shared the app with your email</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">3</div>
+        <div class="step-body">Open the app → tap <strong>Sync</strong> (↻) in the top right to download the latest heat sheet data</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">4</div>
+        <div class="step-body">Do this <strong>before you enter the venue</strong> — once you're in the staging area you may lose Wi-Fi</div>
+      </li>
+    </ul>
+    <div class="tip tip-clerk">
+      <strong>Offline works fine:</strong> After syncing, the app works without internet. Check-ins are saved on your phone and upload automatically when Wi-Fi returns.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Checking In an Athlete — Scan the Bib</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-clerk">1</div>
+        <div class="step-body">Tap the blue <strong>📷 Scan Bib</strong> button at the bottom of the screen</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">2</div>
+        <div class="step-body">Point your camera at the <strong>barcode on the athlete's race bib</strong> — hold steady until it beeps</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">3</div>
+        <div class="step-body">The athlete's card appears — confirm the <strong>Event name</strong> matches the event currently staging</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">4</div>
+        <div class="step-body">Read out the <strong>Lane</strong> (large white number) and <strong>Heat</strong> (amber number) to the athlete — direct them to the correct box</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">5</div>
+        <div class="step-body">Tap <strong>✓ Check In</strong> — the button turns green confirming the athlete is staged</div>
+      </li>
+    </ul>
+
+    <div class="mockup-row">
+      <div class="phone">
+        <div class="p-title clr-clerk">After Scan</div>
+        <div class="hero-row-m">
+          <div class="hero-cell-m">
+            <div class="p-label">Lane</div>
+            <div class="p-value big" style="color:#f1f5f9;">4</div>
+          </div>
+          <div class="hero-cell-m">
+            <div class="p-label">Heat</div>
+            <div class="p-value big" style="color:#f59e0b;">2</div>
+          </div>
+        </div>
+        <div class="p-field">
+          <div class="p-label">Event</div>
+          <div class="p-value" style="font-size:0.72rem;">100m Dash — 8 &amp; under Girls</div>
+        </div>
+        <div class="p-field">
+          <div class="p-label">Name</div>
+          <div class="p-value">Sanders, Arya</div>
+        </div>
+        <div class="p-field">
+          <div class="p-label">Team</div>
+          <div class="p-value">G1 Track</div>
+        </div>
+        <button class="p-btn p-btn-scan">📷 Scan Next Bib</button>
+        <button class="p-btn p-btn-checkin">✓ Check In</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Checking In — Bib Won't Scan?</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-clerk">1</div>
+        <div class="step-body">Tap <strong>⌨️ Enter Bib</strong> (the keyboard button near the scan button)</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">2</div>
+        <div class="step-body">Type the <strong>bib number</strong> from the athlete's bib into the search bar</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">3</div>
+        <div class="step-body">Tap the correct result — confirm the event name matches — then tap <strong>✓ Check In</strong></div>
+      </li>
+    </ul>
+    <div class="tip tip-clerk">
+      <strong>Athlete in multiple events?</strong> You may see more than one result for the same bib. Always confirm the Event name on the card before tapping Check In.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Starting Staging for an Event</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-clerk">1</div>
+        <div class="step-body">When you are ready to begin calling athletes for an event, tap <strong>Events</strong> in the bottom menu</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">2</div>
+        <div class="step-body">Find your event in the list — tap it</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">3</div>
+        <div class="step-body">Tap the orange <strong>▶ Start Staging</strong> button</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">4</div>
+        <div class="step-body">A confirmation message appears — <strong>read the event name</strong> carefully, then tap <strong>Confirm</strong></div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-clerk">5</div>
+        <div class="step-body">All coaches with athletes in this event receive a <strong>Telegram notification instantly</strong></div>
+      </li>
+    </ul>
+    <div class="mockup-row">
+      <div class="phone">
+        <div class="p-title clr-clerk">Events</div>
+        <div class="p-field" style="border-left:3px solid #f59e0b;">
+          <div class="p-label">Up next</div>
+          <div class="p-value" style="font-size:0.75rem;">100m Dash — 8 &amp; under Girls</div>
+          <button class="p-btn p-btn-staging" style="margin-top:8px; font-size:0.75rem; padding:7px 0;">▶ Start Staging</button>
+        </div>
+        <div class="p-field" style="border-left:3px solid #34d399;">
+          <div class="p-label">Staging started 10:42 AM</div>
+          <div class="p-value" style="font-size:0.75rem; color:#34d399;">✓ 200m Dash — 6 &amp; under Girls</div>
+        </div>
+      </div>
+    </div>
+    <div class="alert">
+      <span class="alert-icon">⚠️</span>
+      <span>Only tap <strong>Start Staging</strong> once per event. This immediately notifies all coaches — double-check the event name before confirming.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What to Do If…</h3>
+    <div class="trouble">
+      <div class="trouble-row">
+        <div class="trouble-q">Bib not found after typing</div>
+        <div class="trouble-a">Athlete may be a late entry. Check the paper heat sheet. If confirmed, let them through and note the bib manually.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Wrong event shows up</div>
+        <div class="trouble-a">Athlete runs multiple events. Tap the row that matches today's event before checking in.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">App won't open / crashes</div>
+        <div class="trouble-a">Force-close and reopen AppSheet. If still broken, use the paper heat sheet and tell the meet director.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Athlete already checked in</div>
+        <div class="trouble-a">Another clerk may have scanned them. Confirm with the other clerk — athlete is already staged.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider">· · ·</div>
+
+<!-- ══ COACH ═══════════════════════════════════════════════════════════════ -->
+<div class="role-section" id="coach">
+  <div class="role-header hdr-coach">
+    <div class="ricon">🏅</div>
+    <div>
+      <h2 class="clr-coach">Coach</h2>
+      <p>You receive a Telegram notification the moment staging opens for your event. No app required.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>One-Time Setup</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-coach">1</div>
+        <div class="step-body">Download <strong>Telegram</strong> — free on iPhone and Android</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-coach">2</div>
+        <div class="step-body">The meet director will add you to the <strong>Shockwave Staging Alerts</strong> group</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-coach">3</div>
+        <div class="step-body">Make sure Telegram notifications are <strong>turned on</strong> on your phone — check Settings → Notifications → Telegram</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-coach">4</div>
+        <div class="step-body">That's it — nothing else to install or set up</div>
+      </li>
+    </ul>
+    <div class="tip tip-coach">
+      <strong>No AppSheet needed.</strong> You only need Telegram. Notifications arrive automatically — you don't need to open anything or check the app.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>On Race Day</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-coach">1</div>
+        <div class="step-body">Keep Telegram open in the background on your phone</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-coach">2</div>
+        <div class="step-body">When staging begins for an event your athlete is in, you will receive a <strong>push notification</strong> — it vibrates and shows on your lock screen</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-coach">3</div>
+        <div class="step-body">Read the event name in the message — send your athlete to the <strong>staging area immediately</strong></div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-coach">4</div>
+        <div class="step-body">Athletes should arrive at staging within <strong>5 minutes</strong> of the notification</div>
+      </li>
+    </ul>
+
+    <!-- Telegram bubble mockup -->
+    <div style="max-width:320px; margin:20px auto 0;">
+      <div style="font-size:0.72rem; color:#475569; margin-bottom:8px; padding-left:4px;">Shockwave Staging Alerts</div>
+      <div class="tg-bubble">
+        <div class="tg-from">🏃 Shockwave Staging Bot</div>
+        <div class="tg-text">
+          <strong>Staging has started for:</strong><br>
+          Event 1 — 100 Meter Dash 8 &amp; under Girls<br><br>
+          Please send your athletes to the staging area now.
+        </div>
+        <div class="tg-time">10:42 AM ✓✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What to Do If…</h3>
+    <div class="trouble">
+      <div class="trouble-row">
+        <div class="trouble-q">Notification not received</div>
+        <div class="trouble-a">Check Telegram → Shockwave Staging Alerts group for missed messages. Make sure phone notifications are enabled for Telegram.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Not in the group yet</div>
+        <div class="trouble-a">Find the meet director and ask to be added to the Shockwave Staging Alerts Telegram group.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Athlete missed staging</div>
+        <div class="trouble-a">Send them directly to the staging area — they may still be able to check in. Find a staging clerk immediately.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider">· · ·</div>
+
+<!-- ══ TIMER ════════════════════════════════════════════════════════════════ -->
+<div class="role-section" id="timer">
+  <div class="role-header hdr-timer">
+    <div class="ricon">⏱</div>
+    <div>
+      <h2 class="clr-timer">Timer</h2>
+      <p>You monitor staging completion across all events and heats — so you know when a heat is ready to run.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Getting Access</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-timer">1</div>
+        <div class="step-body">Install <strong>AppSheet</strong> from the App Store or Play Store</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">2</div>
+        <div class="step-body">Sign in with your <strong>Google account</strong> — the meet director shares the app to your email</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">3</div>
+        <div class="step-body">Open the app and tap <strong>Sync</strong> (↻) — do this before entering the venue</div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Viewing Overall Staging Status</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-timer">1</div>
+        <div class="step-body">Tap <strong>Staging Status</strong> in the bottom menu</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">2</div>
+        <div class="step-body">All events appear in order — each shows a <strong>check-in count</strong> (e.g. 7 / 9)</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">3</div>
+        <div class="step-body"><span style="color:#34d399;">Green count</span> = all athletes checked in · <span style="color:#fbbf24;">Amber</span> = in progress · <span style="color:#f87171;">Red</span> = not started</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">4</div>
+        <div class="step-body">Tap <strong>any event</strong> to see the breakdown by heat</div>
+      </li>
+    </ul>
+
+    <div class="mockup-row">
+      <div class="phone">
+        <div class="p-title clr-timer">Staging Status</div>
+        <div class="p-status-row">
+          <div class="p-event">100m Dash — 8u Girls</div>
+          <div class="p-count count-ok">9 / 9</div>
+        </div>
+        <div class="p-status-row">
+          <div class="p-event">200m Dash — 8u Girls</div>
+          <div class="p-count count-mid">6 / 9</div>
+        </div>
+        <div class="p-status-row">
+          <div class="p-event">400m Run — 8u Girls</div>
+          <div class="p-count count-low">0 / 8</div>
+        </div>
+        <div class="p-status-row">
+          <div class="p-event">100m Dash — 8u Boys</div>
+          <div class="p-count count-ok">9 / 9</div>
+        </div>
+      </div>
+
+      <div class="phone">
+        <div class="p-title clr-timer">200m — Heat View</div>
+        <div class="p-status-row">
+          <div class="p-event">Heat 1</div>
+          <div class="p-count count-ok">5 / 5</div>
+        </div>
+        <div style="padding-left:10px;">
+          <div class="p-status-row" style="margin-bottom:4px;">
+            <div class="p-event" style="font-size:0.68rem;">Ln 1 · Sanders, Arya</div>
+            <div class="p-count count-ok" style="font-size:0.7rem;">✓</div>
+          </div>
+          <div class="p-status-row">
+            <div class="p-event" style="font-size:0.68rem;">Ln 2 · Johnson, Lani</div>
+            <div class="p-count count-ok" style="font-size:0.7rem;">✓</div>
+          </div>
+        </div>
+        <div class="p-status-row" style="margin-top:4px;">
+          <div class="p-event">Heat 2</div>
+          <div class="p-count count-mid">1 / 4</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Searching a Specific Event</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-timer">1</div>
+        <div class="step-body">In Staging Status, tap the <strong>search bar</strong> at the top</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">2</div>
+        <div class="step-body">Type part of the event name — e.g. <strong>"400"</strong> or <strong>"under Boys"</strong></div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-timer">3</div>
+        <div class="step-body">The list filters instantly — tap the event to see heat-by-heat status</div>
+      </li>
+    </ul>
+    <div class="tip tip-timer">
+      <strong>When a heat is ready:</strong> All lanes show ✓ checked in. If any athlete is missing, coordinate with the staging clerk before starting the heat.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What to Do If…</h3>
+    <div class="trouble">
+      <div class="trouble-row">
+        <div class="trouble-q">Count seems wrong</div>
+        <div class="trouble-a">Pull down to refresh the view. Clerks may be offline — counts update when they sync.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Athletes missing from a heat</div>
+        <div class="trouble-a">Radio the staging clerk. The athlete may not have arrived yet. Decision to run or scratch is the starter's call.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Event not showing</div>
+        <div class="trouble-a">Clear the search bar. Event may not have had any athletes check in yet — scroll to find it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider">· · ·</div>
+
+<!-- ══ ANNOUNCER ════════════════════════════════════════════════════════════ -->
+<div class="role-section" id="announcer">
+  <div class="role-header hdr-ann">
+    <div class="ricon">🎙</div>
+    <div>
+      <h2 class="clr-ann">Announcer</h2>
+      <p>You use the app to see which events are staging, who is in each heat, and when athletes are ready.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Getting Access</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-ann">1</div>
+        <div class="step-body">Install <strong>AppSheet</strong> from the App Store or Play Store</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">2</div>
+        <div class="step-body">Sign in with your <strong>Google account</strong> — meet director adds your email</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">3</div>
+        <div class="step-body">Sync the app before the meet starts</div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Finding Who Is in a Heat</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-ann">1</div>
+        <div class="step-body">Tap <strong>Staging Status</strong> in the bottom menu</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">2</div>
+        <div class="step-body">Search or scroll to the event you are about to announce</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">3</div>
+        <div class="step-body">Tap the event — you see each heat with athlete name, team, and lane number</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">4</div>
+        <div class="step-body">Rows with <strong>✓ green</strong> are physically present in staging — rows without a check are not yet arrived</div>
+      </li>
+    </ul>
+
+    <div class="mockup-row">
+      <div class="phone">
+        <div class="p-title clr-ann">Heat 1 — 100m 8u</div>
+        <div class="p-status-row">
+          <div class="p-event">
+            <div style="font-size:0.7rem; font-weight:700; color:#e2e8f0;">Ln 1 · Sanders, Arya</div>
+            <div style="font-size:0.65rem; color:#64748b;">G1 Track</div>
+          </div>
+          <div class="p-count count-ok">✓</div>
+        </div>
+        <div class="p-status-row">
+          <div class="p-event">
+            <div style="font-size:0.7rem; font-weight:700; color:#e2e8f0;">Ln 2 · Johnson, Lani</div>
+            <div style="font-size:0.65rem; color:#64748b;">Crazy Speed</div>
+          </div>
+          <div class="p-count count-ok">✓</div>
+        </div>
+        <div class="p-status-row">
+          <div class="p-event">
+            <div style="font-size:0.7rem; font-weight:700; color:#e2e8f0;">Ln 3 · Wilson, Jewlian</div>
+            <div style="font-size:0.65rem; color:#64748b;">SD Elite</div>
+          </div>
+          <div class="p-count count-low">–</div>
+        </div>
+        <div class="p-status-row">
+          <div class="p-event">
+            <div style="font-size:0.7rem; font-weight:700; color:#e2e8f0;">Ln 4 · Spencer, Xani</div>
+            <div style="font-size:0.65rem; color:#64748b;">Pacific Coast</div>
+          </div>
+          <div class="p-count count-ok">✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Knowing When Staging Has Started</h3>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-n sn-ann">1</div>
+        <div class="step-body">Tap <strong>Events</strong> in the bottom menu</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">2</div>
+        <div class="step-body">Events with staging already started show a <strong>green ✓ and timestamp</strong> — e.g. "Staging started 10:42 AM"</div>
+      </li>
+      <li class="step">
+        <div class="step-n sn-ann">3</div>
+        <div class="step-body">Use this to pace your announcements — if staging just started, athletes are on their way</div>
+      </li>
+    </ul>
+    <div class="tip tip-ann">
+      <strong>Quick reference during announcing:</strong> Keep Staging Status open filtered to the current event. Refresh between heats to see who is confirmed present before calling them to the line.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Athlete Quick Reference</h3>
+    <table class="qref">
+      <tr>
+        <th>What you need</th>
+        <th>Where to find it</th>
+      </tr>
+      <tr>
+        <td>Athlete name &amp; team</td>
+        <td>Staging Status → tap event → tap heat</td>
+      </tr>
+      <tr>
+        <td>Lane assignment</td>
+        <td>Shown on every athlete row (Lane column)</td>
+      </tr>
+      <tr>
+        <td>Who is physically present</td>
+        <td>Green ✓ = checked in · dash = not yet arrived</td>
+      </tr>
+      <tr>
+        <td>Seed time</td>
+        <td>Tap individual athlete row → Seed Time field</td>
+      </tr>
+      <tr>
+        <td>When staging started</td>
+        <td>Events view → Started At column</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>What to Do If…</h3>
+    <div class="trouble">
+      <div class="trouble-row">
+        <div class="trouble-q">Athlete in heat isn't checked in</div>
+        <div class="trouble-a">Radio the staging clerk. May still be en route. Starter decides whether to hold or scratch.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Name on screen doesn't match bib</div>
+        <div class="trouble-a">Athlete may have swapped bibs. Go by the bib number — confirm with staging clerk.</div>
+      </div>
+      <div class="trouble-row">
+        <div class="trouble-q">Event missing from the list</div>
+        <div class="trouble-a">Pull down to refresh. If still missing, check the paper heat sheet — may be a relay not tracked in the app.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .page -->
+
+<footer>
+  Shockwave Showcase Track Staging App &nbsp;·&nbsp; For support contact your meet director
+</footer>
+
+</body>
+</html>
