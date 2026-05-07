@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Meet Assist — User Guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0A0F1A;
+      --surface:  #111827;
+      --surface2: #0F1724;
+      --border:   #1E293B;
+      --border2:  #334155;
+      --text:     #E2E8F0;
+      --muted:    #94A3B8;
+      --dim:      #475569;
+      --faint:    #334155;
+      --blue:     #38BDF8;
+      --green:    #34D399;
+      --amber:    #F59E0B;
+      --purple:   #818CF8;
+      --red:      #F87171;
+      --pink:     #F472B6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,15,26,.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+    .nav-inner {
+      max-width: 1120px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 800; color: var(--text);
+    }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .nav-links a {
+      color: var(--dim); font-size: 12px; font-weight: 500;
+      text-decoration: none; transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Layout ── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 80px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ── Section header ── */
+    .section-eyebrow {
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 2.5px; color: var(--blue); margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 38px);
+      font-weight: 900; letter-spacing: -.5px; margin-bottom: 14px;
+    }
+    .section-desc {
+      font-size: 16px; color: var(--muted);
+      max-width: 600px; margin-bottom: 56px; line-height: 1.7;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 96px 0 80px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -160px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,189,248,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(56,189,248,.1); border: 1px solid rgba(56,189,248,.25);
+      border-radius: 20px; padding: 5px 16px;
+      font-size: 10px; font-weight: 800; color: var(--blue);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 900; line-height: 1.08; letter-spacing: -1.5px;
+      margin-bottom: 22px;
+    }
+    .hero h1 em { color: var(--blue); font-style: normal; }
+    .hero-sub {
+      font-size: 18px; color: var(--muted); max-width: 580px;
+      margin: 0 auto 48px; line-height: 1.65;
+    }
+    .hero-pills {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+      margin-bottom: 60px;
+    }
+    .hero-pill {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 16px;
+      font-size: 12px; color: var(--muted); font-weight: 500;
+    }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 20px;
+      overflow: hidden; max-width: 900px; margin: 0 auto;
+    }
+    @media(max-width:600px){ .stats-bar { grid-template-columns: repeat(2,1fr); } }
+    .stat-cell {
+      background: var(--surface);
+      padding: 28px 20px; text-align: center;
+    }
+    .stat-num  { font-size: 36px; font-weight: 900; color: var(--blue); line-height: 1; }
+    .stat-desc { font-size: 11px; color: var(--dim); margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ── Module cards ── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      display: flex; flex-direction: column; gap: 18px;
+      transition: border-color .2s, transform .2s;
+    }
+    .module-card:hover { transform: translateY(-2px); border-color: var(--border2); }
+
+    .module-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .module-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .module-badge {
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; padding: 3px 10px;
+      border-radius: 20px; border: 1px solid;
+    }
+    .badge-live   { color: var(--green);  border-color: rgba(52,211,153,.4);  background: rgba(52,211,153,.08); }
+    .badge-next   { color: var(--blue);   border-color: rgba(56,189,248,.4);  background: rgba(56,189,248,.08); }
+    .badge-future { color: var(--purple); border-color: rgba(129,140,248,.4); background: rgba(129,140,248,.08); }
+
+    .module-name { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .module-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .module-features {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 9px;
+    }
+    .module-features li {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 13px; color: var(--muted);
+    }
+    .module-features li::before {
+      content: '✓';
+      color: var(--green); font-weight: 800;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    .module-highlight {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 12px; font-weight: 600; line-height: 1.6;
+    }
+
+    /* ── App Flow ── */
+    .flow-scroll { overflow-x: auto; padding-bottom: 8px; }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 210px);
+      gap: 16px;
+      min-width: 1080px;
+    }
+
+    .flow-col { display: flex; flex-direction: column; gap: 0; }
+
+    .flow-header {
+      border-radius: 14px 14px 0 0;
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 11px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      margin-bottom: 0;
+    }
+
+    .flow-body {
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0 0 14px 14px;
+      overflow: hidden;
+    }
+
+    .flow-step {
+      padding: 12px 14px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-step strong { display: block; font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+    .flow-step span   { font-size: 11px; color: var(--dim); line-height: 1.4; }
+
+    .flow-step.highlight {
+      background: rgba(56,189,248,.05);
+      border-left: 3px solid var(--blue);
+    }
+    .flow-step.action-amber {
+      background: rgba(245,158,11,.05);
+      border-left: 3px solid var(--amber);
+    }
+    .flow-step.action-blue {
+      background: rgba(56,189,248,.05);
+      border-left: 3px solid var(--blue);
+    }
+    .flow-step.action-green {
+      background: rgba(52,211,153,.05);
+      border-left: 3px solid var(--green);
+    }
+
+    /* ── Journey ── */
+    .journey {
+      display: flex; gap: 0;
+      position: relative; overflow-x: auto; padding-bottom: 8px;
+    }
+    .journey-step {
+      flex: 1; min-width: 180px;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0 8px; position: relative; text-align: center;
+    }
+    .journey-step::after {
+      content: '→';
+      position: absolute; right: -10px; top: 28px;
+      color: var(--border2); font-size: 18px; font-weight: 300;
+      z-index: 1;
+    }
+    .journey-step:last-child::after { display: none; }
+
+    .journey-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; border: 2px solid;
+      background: var(--bg);
+      margin-bottom: 14px; z-index: 1;
+    }
+    .journey-label { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+    .journey-actor {
+      font-size: 9px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .journey-desc {
+      font-size: 11px; color: var(--muted); line-height: 1.55;
+    }
+
+    /* ── Roles ── */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .role-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .role-header-bar {
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .role-avatar {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .role-name  { font-size: 15px; font-weight: 800; }
+    .role-sub   { font-size: 11px; color: var(--dim); margin-top: 2px; font-weight: 500; }
+
+    .role-body { padding: 0 20px 20px; }
+
+    .role-story {
+      font-size: 13px; color: var(--muted); line-height: 1.65;
+      padding: 12px 0 14px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .role-actions { display: flex; flex-direction: column; gap: 8px; }
+    .role-action {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 12px; color: var(--muted);
+    }
+    .role-action .dot {
+      width: 6px; height: 6px; border-radius: 50;
+      flex-shrink: 0; margin-top: 5px; border-radius: 50%;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+    .cta-section h2 {
+      font-size: clamp(24px,4vw,40px);
+      font-weight: 900; letter-spacing: -.5px;
+      margin-bottom: 14px;
+    }
+    .cta-section p {
+      color: var(--muted); font-size: 16px; max-width: 480px;
+      margin: 0 auto 36px; line-height: 1.65;
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:700px) {
+      .module-grid { grid-template-columns: 1fr; }
+      .roles-grid  { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="nav-dot"></span>
+      Track Meet Assist
+    </div>
+    <div class="nav-links">
+      <a href="#modules">Modules</a>
+      <a href="#flow">App Flow</a>
+      <a href="#journey">Athlete Journey</a>
+      <a href="#roles">Who Uses It</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">User Guide · 2026</div>
+    <h1>Everything you need<br>to run a <em>great</em> meet.</h1>
+    <p class="hero-sub">
+      Track Meet Assist covers every role and every moment — from the
+      first bib scan at check-in to the last athlete crossing the finish line.
+      No paper lists. No missed calls. No confusion.
+    </p>
+    <div class="hero-pills">
+      <span class="hero-pill">No app install for athletes</span>
+      <span class="hero-pill">Works without internet</span>
+      <span class="hero-pill">Real-time across all devices</span>
+      <span class="hero-pill">Push notifications to athletes</span>
+      <span class="hero-pill">Automatic hip sticker printing</span>
+      <span class="hero-pill">Multi-day meets supported</span>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-cell">
+        <div class="stat-num">6</div>
+        <div class="stat-desc">App Modules</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">6</div>
+        <div class="stat-desc">User Roles</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">5</div>
+        <div class="stat-desc">Athlete Stages</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">0</div>
+        <div class="stat-desc">Passwords for Athletes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Modules ── -->
+<section id="modules">
+  <div class="container">
+    <div class="section-eyebrow">What the App Does</div>
+    <h2 class="section-title">Six modules, one platform</h2>
+    <p class="section-desc">
+      Every module runs on the same live data — when the clerk checks in an athlete,
+      the staging screen updates instantly, the athlete's phone updates instantly,
+      and the public schedule reflects it immediately.
+    </p>
+
+    <div class="module-grid">
+
+      <!-- 1. Schedule of Events -->
+      <div class="module-card">
+        <div class="module-top">
+          <div>
+            <div class="module-icon" style="background:rgba(56,189,248,.12);">📅</div>
+          </div>
+          <span class="module-badge badge-live">Live</span>
+        </div>
+        <div>
+          <div class="module-name">Schedule of Events</div>
+          <div class="module-desc">
+            The complete running order for the meet — exactly as it appears in the
+            program. Multi-day meets are organised by day with collapsible sections.
+            Every athlete and fan sees the same live schedule.
+          </div>
+        </div>
+        <ul class="module-features">
+          <li>Import the meet schedule from the official meet PDF in seconds</li>
+          <li>Multi-day support — Day 1, Day 2, Prelims, Finals, all in one place</li>
+          <li>Live status per event — Upcoming, Running, Done</li>
+          <li>Visible to everyone — no login, no app install required</li>
+          <li>Admin can adjust event order or add delays on the fly</li>
+        </ul>
+        <div class="module-highlight" style="background:rgba(56,189,248,.07);border-left:3px solid var(--blue);">
+          <span style="color:var(--blue);">Every athlete knows exactly when their event runs — no more guessing from a paper schedule or PA announcement.</span>
+        </div>
+      </div>
+
+      <!-- 2. Smart Check-in (Kiosk Mode) -->
+      <div class="module-card">
+        <div class="module-top">
+          <div>
+            <div class="module-icon" style="background:rgba(52,211,153,.12);">🏷</div>
+          </div>
+          <span class="module-badge badge-live">Live</span>
+        </div>
+        <div>
+          <div class="module-name">Smart Check-in — Kiosk Mode</div>
+          <div class="module-desc">
+            A dedicated check-in station for the venue entrance. The kiosk operator
+            scans a bib, confirms the athlete, and the hip sticker prints automatically.
+            Under two seconds per athlete. No paper lists, no highlighters.
+          </div>
+        </div>
+        <ul class="module-features">
+          <li>Scan bib barcode — athlete is found instantly</li>
+          <li>Shows all events for that bib — operator selects the one being checked in</li>
+          <li>Hip sticker prints automatically with lane, heat, and bib number</li>
+          <li>Re-scan a checked-in bib to reprint or undo a mistake</li>
+          <li>Works offline on local Wi-Fi — no internet dependency</li>
+          <li>Multiple kiosk tablets share one printer queue — no conflicts</li>
+        </ul>
+        <div class="module-highlight" style="background:rgba(52,211,153,.07);border-left:3px solid var(--green);">
+          <span style="color:var(--green);">The hip sticker (lane, heat, bib) goes on the athlete's body — the staging team verifies it without any lookup. No wrong-lane errors at the blocks.</span>
+        </div>
+      </div>
+
+      <!-- 3. Athlete & Coach Self-Service -->
+      <div class="module-card">
+        <div class="module-top">
+          <div>
+            <div class="module-icon" style="background:rgba(244,114,182,.12);">📱</div>
+          </div>
+          <span class="module-badge badge-live">Live</span>
+        </div>
+        <div>
+          <div class="module-name">Athlete &amp; Coach Self-Service</div>
+          <div class="module-desc">
+            Any athlete or coach can look up a bib on their own phone and see every
+            event for that athlete — heat, lane, seed time, and live status. No app
+            to install, no account to create.
+          </div>
+        </div>
+        <!-- Mock athlete card -->
+        <div style="padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;font-size:12px;line-height:1.9;">
+          <div style="font-weight:800;color:var(--text);margin-bottom:8px;">Bib 303 — Rutvi Sharma</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:8px;color:var(--green);">
+              <span>✅</span>
+              <span>Girls 1600m · Heat 2, Lane 5</span>
+              <span style="margin-left:auto;font-size:10px;color:var(--dim);">Checked In</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;color:var(--amber);font-weight:600;">
+              <span>📣</span>
+              <span>Girls 800m · Heat 1, Lane 3</span>
+              <span style="margin-left:auto;font-size:10px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);padding:1px 7px;border-radius:10px;">At Staging</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;color:var(--muted);">
+              <span>🕐</span>
+              <span>Girls 400m · Heat 2, Lane 7</span>
+              <span style="margin-left:auto;font-size:10px;">Upcoming</span>
+            </div>
+          </div>
+        </div>
+        <ul class="module-features">
+          <li>Enter any bib number to see that athlete's full event list</li>
+          <li>See heat, lane, seed time, and live staging status per event</li>
+          <li>Tap "Watch My Events" to get push notifications — no login needed</li>
+          <li>Coach can look up any athlete on their team by bib</li>
+          <li>Status updates in real time as the meet progresses</li>
+        </ul>
+        <div class="module-highlight" style="background:rgba(244,114,182,.07);border-left:3px solid var(--pink);">
+          <span style="color:var(--pink);">Parents, coaches, and athletes all use the same screen. No separate coach app, no team login portal.</span>
+        </div>
+      </div>
+
+      <!-- 4. Staging Assist for Clerk -->
+      <div class="module-card">
+        <div class="module-top">
+          <div>
+            <div class="module-icon" style="background:rgba(245,158,11,.12);">🧠</div>
+          </div>
+          <span class="module-badge badge-live">Live</span>
+        </div>
+        <div>
+          <div class="module-name">Staging Assist — Clerk Dashboard</div>
+          <div class="module-desc">
+            The staging clerk's command centre. Select an event, see every heat and
+            every athlete at a glance. The screen tells you exactly who is present,
+            who is missing, and when a heat is ready to call.
+          </div>
+        </div>
+        <ul class="module-features">
+          <li>Select any event — see all heats with athlete list and check-in progress</li>
+          <li>Heat number turns green when every athlete is present — automatic alert fires</li>
+          <li>Tap the "First Call" card to notify all registered athletes in the event at once</li>
+          <li>A confirmation screen shows exactly what notification will be sent before you confirm</li>
+          <li>After sending, the card shows the time the call was sent — prevents double-calling</li>
+          <li>Each heat tile shows its current stage: At Staging, On Field, Ready to Race</li>
+        </ul>
+        <div class="module-highlight" style="background:rgba(245,158,11,.07);border-left:3px solid var(--amber);">
+          <span style="color:var(--amber);">First Call goes to every registered athlete for that event — all heats — with one tap and one confirmation. No individual calls, no PA needed.</span>
+        </div>
+      </div>
+
+      <!-- 5. Athlete Communication -->
+      <div class="module-card">
+        <div class="module-top">
+          <div>
+            <div class="module-icon" style="background:rgba(248,113,113,.12);">🔔</div>
+          </div>
+          <span class="module-badge badge-live">Live</span>
+        </div>
+        <div>
+          <div class="module-name">Athlete Communication</div>
+          <div class="module-desc">
+            Athletes and coaches receive push notifications directly on their phones
+            as the meet progresses — without any app or account. One tap to subscribe,
+            zero effort to stay informed.
+          </div>
+        </div>
+        <!-- Notification previews -->
+        <div style="display:flex;flex-direction:column;gap:8px;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <div style="width:32px;height:32px;background:rgba(245,158,11,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">📣</div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);">🟡 First Call — Report to Staging</div>
+              <div style="font-size:11px;color:var(--dim);">Girls 800m — all heats, report to the staging area now.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <div style="width:32px;height:32px;background:rgba(56,189,248,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🏃</div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);">🏃 Moving to Field</div>
+              <div style="font-size:11px;color:var(--dim);">Heat 2 · Girls 800m — athletes are moving to the field.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <div style="width:32px;height:32px;background:rgba(52,211,153,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🏁</div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);">🏁 Ready to Race!</div>
+              <div style="font-size:11px;color:var(--dim);">Heat 2 · Girls 800m — you're ready to race!</div>
+            </div>
+          </div>
+        </div>
+        <ul class="module-features">
+          <li>Athlete opens their bib view and taps "Watch My Events on This Device"</li>
+          <li>No app, no account, no password — one tap and they're subscribed</li>
+          <li>Push arrives even when the phone screen is off or the app is closed</li>
+          <li>Three notification types: First Call, Moving to Field, Ready to Race</li>
+          <li>Tap "Stop Watching" at any time to unsubscribe instantly</li>
+        </ul>
+        <div class="module-highlight" style="background:rgba(248,113,113,.07);border-left:3px solid var(--red);">
+          <span style="color:var(--red);">PA announcements become optional. Athletes know exactly when they're called — on their own phone, before the PA even speaks.</span>
+        </div>
+      </div>
+
+      <!-- 6. Meet Administration -->
+      <div class="module-card">
+        <div class="module-top">
+          <div>
+            <div class="module-icon" style="background:rgba(129,140,248,.12);">⚙️</div>
+          </div>
+          <span class="module-badge badge-live">Live</span>
+        </div>
+        <div>
+          <div class="module-name">Meet Administration</div>
+          <div class="module-desc">
+            The admin manages meets, imports the heat sheet, controls which meet is
+            active across all devices, and publishes the meet to the public listing —
+            all from a single Settings screen.
+          </div>
+        </div>
+        <ul class="module-features">
+          <li>Create a meet with name, location, and dates — appears on the public landing page</li>
+          <li>Import the schedule of events from the meet PDF — AI reads the format automatically</li>
+          <li>Import athlete heat sheet — all events, heats, lanes, and seed times in one upload</li>
+          <li>Set the active meet — every device updates instantly, no manual refresh needed</li>
+          <li>Publish or archive meets — only published meets appear in the public listing</li>
+          <li>Manage user accounts and assign roles (clerk, official, kiosk, admin)</li>
+          <li>Delete and re-upload the schedule if the meet program changes</li>
+        </ul>
+        <div class="module-highlight" style="background:rgba(129,140,248,.07);border-left:3px solid var(--purple);">
+          <span style="color:var(--purple);">One admin action changes the active meet for every device in the venue simultaneously — no messaging clerks to refresh their screens.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── App Flow ── -->
+<section id="flow">
+  <div class="container">
+    <div class="section-eyebrow">How Everyone Uses It</div>
+    <h2 class="section-title">Five journeys, one shared meet</h2>
+    <p class="section-desc">
+      Every person at the meet — from the fan in the stands to the official at the
+      track entry — uses the same platform. Each sees exactly what they need.
+      Nothing more, nothing less.
+    </p>
+
+    <div class="flow-scroll">
+      <div class="flow-grid">
+
+        <!-- Public -->
+        <div class="flow-col">
+          <div class="flow-header" style="background:rgba(56,189,248,.1);color:var(--blue);">
+            🌐 Public &amp; Fans
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <strong>Visit the meet page</strong>
+              <span>No app, no login — opens in any browser</span>
+            </div>
+            <div class="flow-step">
+              <strong>Browse published meets</strong>
+              <span>See name, location, and date for each meet</span>
+            </div>
+            <div class="flow-step">
+              <strong>View the schedule</strong>
+              <span>Events grouped by day, collapsible sections</span>
+            </div>
+            <div class="flow-step highlight">
+              <strong>Live event status</strong>
+              <span>See which event is running right now and what's next</span>
+            </div>
+            <div class="flow-step">
+              <strong>Look up any bib</strong>
+              <span>Find an athlete's events, heat, lane, and status</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Athlete Self-Service -->
+        <div class="flow-col">
+          <div class="flow-header" style="background:rgba(244,114,182,.1);color:var(--pink);">
+            🏃 Athlete / Coach
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <strong>Open the meet page</strong>
+              <span>No app install, no account</span>
+            </div>
+            <div class="flow-step">
+              <strong>Enter bib number</strong>
+              <span>See all events for that athlete</span>
+            </div>
+            <div class="flow-step highlight">
+              <strong>See heat · lane · seed time</strong>
+              <span>Per event, with live staging status</span>
+            </div>
+            <div class="flow-step action-amber">
+              <strong>🔔 Watch My Events</strong>
+              <span>One tap — phone subscribed to push notifications for this bib</span>
+            </div>
+            <div class="flow-step action-green">
+              <strong>Receive staging alerts</strong>
+              <span>First Call, Moving to Field, Ready to Race — live on their phone</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kiosk / Clerk Check-in -->
+        <div class="flow-col">
+          <div class="flow-header" style="background:rgba(52,211,153,.1);color:var(--green);">
+            🏷 Kiosk / Check-in
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <strong>Sign in — kiosk or clerk role</strong>
+              <span>Tablet or phone at the check-in station</span>
+            </div>
+            <div class="flow-step">
+              <strong>Scan or type bib number</strong>
+              <span>Athlete found in under a second</span>
+            </div>
+            <div class="flow-step">
+              <strong>Select the event to check in</strong>
+              <span>Multi-event athletes — each event checked in separately</span>
+            </div>
+            <div class="flow-step action-green">
+              <strong>Hip sticker prints automatically</strong>
+              <span>Lane · Heat · Bib printed on Zebra label printer</span>
+            </div>
+            <div class="flow-step highlight">
+              <strong>Re-scan to reprint or undo</strong>
+              <span>Accidental check-in? Tap to reverse. Wrong sticker? Reprint.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clerk Staging -->
+        <div class="flow-col">
+          <div class="flow-header" style="background:rgba(245,158,11,.1);color:var(--amber);">
+            📣 Staging Clerk
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <strong>Open Staging Dashboard</strong>
+              <span>Select the event being called</span>
+            </div>
+            <div class="flow-step">
+              <strong>Monitor heat progress</strong>
+              <span>Each heat shows who is and isn't checked in</span>
+            </div>
+            <div class="flow-step highlight">
+              <strong>Auto-alert when heat is complete</strong>
+              <span>"Heat 2 Ready!" dialog fires automatically at 100%</span>
+            </div>
+            <div class="flow-step action-amber">
+              <strong>📣 Tap First Call card</strong>
+              <span>Confirmation sheet shows what will be sent</span>
+            </div>
+            <div class="flow-step action-green">
+              <strong>Confirm → push sent</strong>
+              <span>All registered athletes notified instantly. Card shows sent time.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Official -->
+        <div class="flow-col">
+          <div class="flow-header" style="background:rgba(129,140,248,.1);color:var(--purple);">
+            📋 Official / Escort
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <strong>Open Staging Dashboard</strong>
+              <span>Select the event · see heat tiles</span>
+            </div>
+            <div class="flow-step">
+              <strong>Expand heat to see athletes</strong>
+              <span>Bib · name · check-in status per row</span>
+            </div>
+            <div class="flow-step">
+              <strong>Verify compliance</strong>
+              <span>Bib and uniform check at track entry</span>
+            </div>
+            <div class="flow-step action-blue">
+              <strong>🏃 Tap Move to Field</strong>
+              <span>Heat athletes move to On Field · push notification sent</span>
+            </div>
+            <div class="flow-step action-green">
+              <strong>🏁 Tap Ready to Race</strong>
+              <span>Heat confirmed · push "Ready to Race!" sent to athletes</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Admin note -->
+    <div style="margin-top:32px;padding:20px 24px;background:rgba(129,140,248,.06);border:1px solid rgba(129,140,248,.2);border-radius:14px;display:flex;align-items:flex-start;gap:16px;">
+      <div style="font-size:28px;flex-shrink:0;">⚙️</div>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Meet Admin — runs across all flows</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          The admin creates the meet, uploads the heat sheet and schedule, sets which meet is active, and manages who has access.
+          Setting the active meet is one tap in Settings — every device in the venue switches instantly, no matter which screen they're on.
+          Admins can also perform every action that clerks and officials can.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Athlete Journey ── -->
+<section id="journey">
+  <div class="container">
+    <div class="section-eyebrow">Athlete Journey</div>
+    <h2 class="section-title">From warm-up to finish line</h2>
+    <p class="section-desc">
+      Every athlete moves through five stages. Each stage is triggered by a
+      real person — clerk, official, or the athlete themselves — and every
+      device sees the update the moment it happens.
+    </p>
+
+    <div class="journey">
+
+      <div class="journey-step">
+        <div class="journey-circle" style="border-color:var(--green);color:var(--green);">✅</div>
+        <div class="journey-label" style="color:var(--green);">Checked In</div>
+        <div class="journey-actor" style="color:var(--green);">Kiosk Clerk or Self</div>
+        <div class="journey-desc">
+          Bib scanned at check-in. Hip sticker printed and handed to athlete.
+          Each event is checked in separately — athlete can skip evening events
+          without affecting others.
+        </div>
+      </div>
+
+      <div class="journey-step">
+        <div class="journey-circle" style="border-color:var(--amber);color:var(--amber);">📣</div>
+        <div class="journey-label" style="color:var(--amber);">At Staging</div>
+        <div class="journey-actor" style="color:var(--amber);">Staging Clerk</div>
+        <div class="journey-desc">
+          Clerk taps First Call in the dashboard. Push notification goes to
+          every registered athlete in the event. "Report to the staging area now."
+        </div>
+      </div>
+
+      <div class="journey-step">
+        <div class="journey-circle" style="border-color:var(--blue);color:var(--blue);">🏃</div>
+        <div class="journey-label" style="color:var(--blue);">On Field</div>
+        <div class="journey-actor" style="color:var(--blue);">Heat Escort</div>
+        <div class="journey-desc">
+          Official reviews the heat, verifies bib and uniform, and taps
+          "Move to Field." Push sent: "Athletes are moving to the field."
+        </div>
+      </div>
+
+      <div class="journey-step">
+        <div class="journey-circle" style="border-color:var(--green);color:var(--green);">🏁</div>
+        <div class="journey-label" style="color:var(--green);">Ready to Race</div>
+        <div class="journey-actor" style="color:var(--green);">Official confirms</div>
+        <div class="journey-desc">
+          Official taps "Ready to Race" when the heat is at the line.
+          Final push sent to athletes. Self-service screen shows bright green.
+        </div>
+      </div>
+
+      <div class="journey-step">
+        <div class="journey-circle" style="border-color:var(--dim);color:var(--dim);">🏅</div>
+        <div class="journey-label" style="color:var(--muted);">Done</div>
+        <div class="journey-actor" style="color:var(--dim);">Official — heat level</div>
+        <div class="journey-desc">
+          Official marks the heat Done. Every athlete in that heat is
+          updated automatically. Schedule advances to the next event.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Self-service note -->
+    <div style="margin-top:48px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;">
+      <div style="padding:20px;background:rgba(244,114,182,.06);border:1px solid rgba(244,114,182,.2);border-radius:14px;">
+        <div style="font-size:18px;margin-bottom:10px;">📱</div>
+        <div style="font-size:13px;font-weight:800;color:var(--pink);margin-bottom:6px;">Any phone, any browser</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">Athlete status is visible to anyone who knows the bib. No app, no login. Share the link with parents before the meet.</div>
+      </div>
+      <div style="padding:20px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:14px;">
+        <div style="font-size:18px;margin-bottom:10px;">🔔</div>
+        <div style="font-size:13px;font-weight:800;color:var(--amber);margin-bottom:6px;">Push even when app is closed</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">Notifications arrive on the lock screen. Athletes don't need to have the browser open — the alert finds them wherever they are.</div>
+      </div>
+      <div style="padding:20px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);border-radius:14px;">
+        <div style="font-size:18px;margin-bottom:10px;">🎽</div>
+        <div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:6px;">Hip sticker = no wrong lanes</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">The sticker printed at check-in shows the athlete's lane in large print. The official at the track entry verifies it against the start list — last check before the blocks.</div>
+      </div>
+      <div style="padding:20px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.2);border-radius:14px;">
+        <div style="font-size:18px;margin-bottom:10px;">⚡</div>
+        <div style="font-size:13px;font-weight:800;color:var(--blue);margin-bottom:6px;">Per-event, not per-athlete</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">An athlete competing in 3 events checks in for each one separately. They can scratch an event without affecting their other check-ins. Everything stays accurate.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Roles ── -->
+<section id="roles">
+  <div class="container">
+    <div class="section-eyebrow">Who Uses It</div>
+    <h2 class="section-title">Six roles, one app</h2>
+    <p class="section-desc">
+      Everyone at the meet has a role, and every role has a focused view.
+      Guests and athletes need no login at all. Staff sign in once and their
+      screen shows exactly what their job requires.
+    </p>
+
+    <div class="roles-grid">
+
+      <!-- Guest / Public -->
+      <div class="role-card" style="border-color:rgba(56,189,248,.2);">
+        <div class="role-header-bar" style="background:rgba(56,189,248,.06);">
+          <div class="role-avatar" style="background:rgba(56,189,248,.12);">🌐</div>
+          <div>
+            <div class="role-name">Guest &amp; Public</div>
+            <div class="role-sub">No login · any browser</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <div class="role-story">
+            A parent driving to the venue pulls up the meet page on their phone.
+            They can see the schedule, check which event is running live, and look up
+            their child's bib to see their heat and lane — before they've even parked.
+          </div>
+          <div class="role-actions">
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Browse the public meet listing — all published meets</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>View the full schedule of events with live status</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Look up any bib — see that athlete's events, heat, lane</div>
+            <div class="role-action"><span class="dot" style="background:var(--dim)"></span>Cannot check in athletes or access any staff views</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Athlete Self-Service -->
+      <div class="role-card" style="border-color:rgba(244,114,182,.2);">
+        <div class="role-header-bar" style="background:rgba(244,114,182,.06);">
+          <div class="role-avatar" style="background:rgba(244,114,182,.12);">🏃</div>
+          <div>
+            <div class="role-name">Athlete</div>
+            <div class="role-sub">No login · enter bib number</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <div class="role-story">
+            Rutvi looks up bib 303 on her phone. She sees her three events, their
+            heats and lanes, and a "Watch My Events" button. She taps it once. For
+            the rest of the day, her phone alerts her before each event — no PA needed.
+          </div>
+          <div class="role-actions">
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>View all events for their bib with heat, lane, and seed time</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>See live staging status — Checked In, At Staging, On Field, Ready to Race</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Subscribe to push notifications with one tap — no account needed</div>
+            <div class="role-action"><span class="dot" style="background:var(--dim)"></span>Sees only their own bib's data — not other athletes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kiosk -->
+      <div class="role-card" style="border-color:rgba(52,211,153,.2);">
+        <div class="role-header-bar" style="background:rgba(52,211,153,.06);">
+          <div class="role-avatar" style="background:rgba(52,211,153,.12);">🏷</div>
+          <div>
+            <div class="role-name">Kiosk Operator</div>
+            <div class="role-sub">Sign-in required</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <div class="role-story">
+            The kiosk operator sits at the venue entrance with a tablet and a label
+            printer. Athletes walk up, their bib is scanned, the event is confirmed,
+            and the hip sticker comes out of the printer — all in under two seconds.
+          </div>
+          <div class="role-actions">
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Scan bib or type manually to find the athlete</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Check in for a specific event — each event handled separately</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Hip sticker prints automatically on the Zebra label printer</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Re-scan to reprint or undo an accidental check-in</div>
+            <div class="role-action"><span class="dot" style="background:var(--dim)"></span>No access to staging dashboard or admin settings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clerk -->
+      <div class="role-card" style="border-color:rgba(245,158,11,.2);">
+        <div class="role-header-bar" style="background:rgba(245,158,11,.06);">
+          <div class="role-avatar" style="background:rgba(245,158,11,.12);">📣</div>
+          <div>
+            <div class="role-name">Staging Clerk</div>
+            <div class="role-sub">Sign-in required</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <div class="role-story">
+            The staging clerk is at the staging tent. They select the upcoming event,
+            watch the heat tiles fill with green check marks as athletes arrive, and
+            the moment a heat is complete the app alerts them. They tap First Call —
+            a confirmation screen appears — they confirm and every registered athlete
+            gets a push notification.
+          </div>
+          <div class="role-actions">
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>All kiosk access — check in and print hip stickers</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Staging dashboard — see every heat and athlete in the selected event</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Automatic alert when a heat reaches 100% checked in</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>First Call — send push notification to all athletes in the event at once</div>
+            <div class="role-action"><span class="dot" style="background:var(--dim)"></span>Move to Field and Ready to Race are handled by the official</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Official -->
+      <div class="role-card" style="border-color:rgba(129,140,248,.2);">
+        <div class="role-header-bar" style="background:rgba(129,140,248,.06);">
+          <div class="role-avatar" style="background:rgba(129,140,248,.12);">📋</div>
+          <div>
+            <div class="role-name">Official / Heat Escort</div>
+            <div class="role-sub">Sign-in required</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <div class="role-story">
+            The heat escort walks the athletes from staging to the track entry point.
+            They open the heat tile, verify each athlete's bib and uniform, then tap
+            "Move to Field." Once the heat is at the starting line, they tap "Ready to
+            Race" and every athlete's phone lights up with the final alert.
+          </div>
+          <div class="role-actions">
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>View staging dashboard — see which heats are At Staging and ready</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Expand each heat tile to see individual athlete status</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Move to Field — one tap moves the heat, sends push notification</div>
+            <div class="role-action"><span class="dot" style="background:var(--green)"></span>Ready to Race — confirms heat at the line, sends final push</div>
+            <div class="role-action"><span class="dot" style="background:var(--dim)"></span>Does not check in athletes or initiate First Call</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin -->
+      <div class="role-card" style="border-color:rgba(129,140,248,.35);">
+        <div class="role-header-bar" style="background:rgba(129,140,248,.08);">
+          <div class="role-avatar" style="background:rgba(129,140,248,.15);">⚙️</div>
+          <div>
+            <div class="role-name">Meet Admin</div>
+            <div class="role-sub">Sign-in required · full access</div>
+          </div>
+        </div>
+        <div class="role-body">
+          <div class="role-story">
+            The meet admin sets everything up before the day begins and keeps it
+            running behind the scenes. They create the meet, upload the schedule and
+            heat sheet, publish the meet to the public listing, and manage which users
+            have which roles. During the meet they can do everything any other role
+            can do.
+          </div>
+          <div class="role-actions">
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Create and name meets with location, date, and public listing details</div>
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Import schedule of events from meet PDF — AI reads the format</div>
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Import the heat sheet — all events, heats, lanes, and seed times</div>
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Set the active meet — all devices update instantly</div>
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Publish meets to the public listing or archive old ones</div>
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Add and manage user accounts with role assignments</div>
+            <div class="role-action"><span class="dot" style="background:var(--purple)"></span>Perform any clerk or official action during the meet</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<div class="cta-section">
+  <div class="container">
+    <h2>Ready for meet day.</h2>
+    <p>
+      Every role covered. Every device in sync. Every athlete notified
+      at exactly the right moment — from first check-in to the starting blocks.
+    </p>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+      <div style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;color:var(--green);">✓ No app install for athletes</div>
+      <div style="background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;color:var(--blue);">✓ Real-time across all devices</div>
+      <div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;color:var(--amber);">✓ Push notifications to every athlete</div>
+      <div style="background:rgba(129,140,248,.1);border:1px solid rgba(129,140,248,.3);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;color:var(--purple);">✓ Works without internet</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
